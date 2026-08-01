@@ -19,12 +19,12 @@ VERIFIED_ROLE_ID = 1524487798810476546
 # آيدي رتبة (جاري تفعيل ، RC) - تسحب من العضو:
 PENDING_ROLE_ID = 1524487796990021803
 
-# روابط الصور الخاصة بك:
-LOGO_IMAGE = "https://cdn.discordapp.com/attachments/1524488438064353300/1531830162554097716/7d9ad4b5630df1cb1350ef7ba58178db.webp?ex=6a6aa382&is=6a695202&hm=6b6fb46883e46a5cd2b98c0f5204c3ed215e453380a50930b21b2a99c26d0e38&"
-BANNER_IMAGE = "https://cdn.discordapp.com/attachments/1524488438064353300/1531830162910351532/7d9ad4b5630df1cb1350ef7ba58178db-1_edit_31147386794314.jpg?ex=6a6aa382&is=6a695202&hm=7fae7b156e4a6184fd2b23de049735384bc744be7cb453f4eb88cd46404a0498&"
+# روابط الصور الجديدة الخاصة بك:
+LOGO_IMAGE = "https://cdn.discordapp.com/attachments/1526565085542088755/1533177350752047155/Screenshot_20260801_195212.jpg?ex=6a6f8a2d&is=6a6e38ad&hm=b57da0deb9dfa87fdd8f423df123799ef033a33414a75f609dd70b9c134cf444&"
+BANNER_IMAGE = "https://cdn.discordapp.com/attachments/1526565085542088755/1533177350752047155/Screenshot_20260801_195212.jpg?ex=6a6f8a2d&is=6a6e38ad&hm=b57da0deb9dfa87fdd8f423df123799ef033a33414a75f609dd70b9c134cf444&"
 
-# إيموجي سيرفرك المخصص:
-CUSTOM_EMOJI = discord.PartialEmoji(name="emoji_12", id=1531847410056171580)
+# الإيموجي الجديد المخصص للأزرار:
+CUSTOM_EMOJI = discord.PartialEmoji(name="emoji_7", id=1533176941476188422)
 # ---------------------------------------------------------
 
 class CloseTicketView(discord.ui.View):
@@ -72,7 +72,7 @@ async def create_ticket_channel(interaction: discord.Interaction, prefix: str, t
     await ticket_channel.send(embed=embed, view=CloseTicketView())
     await interaction.followup.send(f"تم إنشاء تذكرتك بنجاح: {ticket_channel.mention}", ephemeral=True)
 
-# 1. بنل التذاكر العامة
+# 1. بنل التذاكر العامة (مع الإيموجي الجديد)
 class TicketPanelView(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=None)
@@ -93,7 +93,7 @@ class TicketPanelView(discord.ui.View):
     async def btn_inspect(self, interaction: discord.Interaction, button: discord.ui.Button):
         await create_ticket_channel(interaction, "رقابة-وتفتيش", "طلب هيئة الرقابة والتفتيش")
 
-# 2. بنل خاص لطلب التفعيل فقط
+# 2. بنل خاص لطلب التفعيل فقط (مع الإيموجي الجديد)
 class VerifyPanelView(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=None)
@@ -130,7 +130,7 @@ async def process_verification(guild, target_member, admin_user, channel):
         await target_member.send(embed=dm_embed)
         await channel.send(f"✅ تم إعطاء رتبة **مواطن ، RC** وسحب رتبة **جاري تفعيل ، RC** من {target_member.mention} وإرسال الرسالة لخاصّه بنجاح!")
     except discord.Forbidden:
-        await channel.send(f"✅ تم تحديث رتب {target_mention.mention} بنجاح، لكن تعذر إرسال الرسالة للخاص لأن خاصّ العضو مغلق.")
+        await channel.send(f"✅ تم تحديث رتب {target_member.mention} بنجاح، لكن تعذر إرسال الرسالة للخاص لأن خاصّ العضو مغلق.")
 
 @bot.tree.command(name="verify", description="تفعيل العضو المنسوب وإعطائه الرتبة وسحب رتبة الانتظار")
 @commands.has_permissions(administrator=True)
@@ -173,15 +173,15 @@ async def setup_tickets(interaction: discord.Interaction):
 @commands.has_permissions(administrator=True)
 async def setup_verify(interaction: discord.Interaction):
     await interaction.response.defer(ephemeral=True)
-    embed = duda = discord.Embed(
+    embed = discord.Embed(
         title="✨ قسم تفعيل الحسابات",
         description="اضغط على الزر بالأسفل لفتح تذكرة طلب تفعيل حسابك في السيرفر\n\n@everyone",
         color=discord.Color.green()
     )
     if LOGO_IMAGE.startswith("http"):
-        duda.set_thumbnail(url=LOGO_IMAGE)
+        embed.set_thumbnail(url=LOGO_IMAGE)
 
-    await interaction.channel.send(embed=duda, view=VerifyPanelView())
+    await interaction.channel.send(embed=embed, view=VerifyPanelView())
     await interaction.followup.send("تم إرسال بنل التفعيل المنفصل بنجاح!", ephemeral=True)
 
 @bot.event
